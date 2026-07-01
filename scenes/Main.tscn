@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://b4m1kdkebn3ae"]
+
+[ext_resource type="Script" uid="uid://cqmmr177kf8yx" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c5dp75vq3j4dm" path="res://assets/stage_wild_woods.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dtn68bo4xx1rk" path="res://assets/title_arcade.png" id="3"]
+
+[node name="Main" type="Node2D" unique_id=1881861600]
+script = ExtResource("1")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=309999244]
+texture = ExtResource("2")
+centered = false
+
+[node name="TitleScreen" type="Sprite2D" parent="." unique_id=1238895771]
+texture = ExtResource("3")
+centered = false
