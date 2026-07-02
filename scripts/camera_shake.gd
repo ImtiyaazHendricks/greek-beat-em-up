@@ -1,10 +1,10 @@
 extends Node
 
-var shake_time := 0.0
-var shake_strength := 0.0
-var _duration := 0.0
+var shake_time: float = 0.0
+var shake_strength: float = 0.0
+var _duration: float = 0.0
 var camera: Camera2D = null
-var original_offset := Vector2.ZERO
+var original_offset: Vector2 = Vector2.ZERO
 
 func _ready():
 	# Try to find the active Camera2D for the current viewport
@@ -27,10 +27,10 @@ func _process(delta: float) -> void:
 			return
 	if shake_time > 0.0:
 		shake_time = max(0.0, shake_time - delta)
-		var t := shake_time / max(0.0001, _duration)
-		var amount := shake_strength * t
-		var ox := (randf() * 2.0 - 1.0) * amount
-		var oy := (randf() * 2.0 - 1.0) * amount
+		var t: float = shake_time / max(0.0001, _duration)
+		var amount: float = shake_strength * t
+		var ox: float = (randf() * 2.0 - 1.0) * amount
+		var oy: float = (randf() * 2.0 - 1.0) * amount
 		camera.offset = original_offset + Vector2(ox, oy)
 	else:
 		if camera.offset != original_offset:
