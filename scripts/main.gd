@@ -6,6 +6,13 @@ const UpgradeCardScene := preload("res://scenes/UpgradeCard.tscn")
 const SparkScene := preload("res://scripts/hit_spark.gd")
 const FloatingTextScene := preload("res://scripts/floating_text.gd")
 
+# New preloads for global hit effects
+const Hitstop := preload("res://scripts/hitstop.gd")
+const CameraShake := preload("res://scripts/camera_shake.gd")
+
+var hitstop = null
+var cam_shake = null
+
 var heroes := [
 	{"name":"Perseus", "god":"Ares", "health":145, "damage":20, "speed":238, "durability":4, "sprite":"res://assets/hero_leonidas.png", "role":"sword / shield bruiser", "sprite_scale":1.15},
 	{"name":"Athena", "god":"Athena", "health":125, "damage":17, "speed":270, "durability":6, "sprite":"res://assets/hero_atalanta.png", "role":"balanced spear guard", "sprite_scale":1.12},
@@ -48,6 +55,11 @@ var select_cards:Array[Node] = []
 func _ready():
 	rng.randomize()
 	_setup_ui()
+	# instantiate global helpers for hit effects
+	hitstop = Hitstop.new()
+	add_child(hitstop)
+	cam_shake = CameraShake.new()
+	add_child(cam_shake)
 	_show_character_select()
 
 func _process(delta):
@@ -210,12 +222,22 @@ func _on_enemy_killed(reward:int):
 		_spawn_wave()
 
 func _on_enemy_damaged(pos:Vector2, amount:int):
+	# visual + feel hooks: hitstop + camera shake
+	if hitstop:
+		hitstop.apply(0.05)
+	if cam_shake:
+		cam_shake.start(0.10, 8.0)
 	_spawn_spark(pos, 1.0)
 	_spawn_float(str(amount), pos + Vector2(10, -22), Color(1.0, 0.55, 0.18))
 
 func _on_hit_landed(pos:Vector2, amount:int):
 	combo_hits += 1
 	combo_timer = 1.35
+	# lighter hitstop for normal hits
+	if hitstop:
+		hitstop.apply(0.04)
+	if cam_shake:
+		cam_shake.start(0.08, 6.0)
 	_spawn_spark(pos, 1.1)
 
 func _stage_clear():
