@@ -1,0 +1,4 @@
+res://scenes/Main.tscn
+res://scripts/player.gd
+res://scripts/camera_shake.gd
+res://scripts/hit_spark.gd

@@ -1,4 +1,4 @@
-extends Node2D
+extends CharacterBody2D
 
 signal died
 signal hit_landed(position:Vector2, damage:int)
