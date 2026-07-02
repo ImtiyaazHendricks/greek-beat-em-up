@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends Node2D
 
 signal died
 signal hit_landed(position:Vector2, damage:int)
@@ -26,6 +26,13 @@ var level := 1
 
 @onready var sprite := $Sprite
 
+# New preloads for camera shake and hitstop
+const CameraShake := preload("res://scripts/camera_shake.gd")
+const Hitstop := preload("res://scripts/hitstop.gd")
+
+var cam_shake = null
+var hitstop = null
+
 func _ready():
 	add_to_group("player")
 	if hero_data:
@@ -39,6 +46,12 @@ func _ready():
 		sprite.texture = load(hero_data["sprite"])
 		sprite.scale = Vector2(float(hero_data.get("sprite_scale", 1.0)), float(hero_data.get("sprite_scale", 1.0)))
 	z_index = int(position.y)
+
+	# instantiate local hitstop and camera shake helpers so we don't require editor autoloads
+	hitstop = Hitstop.new()
+	add_child(hitstop)
+	cam_shake = CameraShake.new()
+	add_child(cam_shake)
 
 func _physics_process(delta):
 	z_index = int(position.y)
