@@ -1,0 +1,38 @@
+[gd_scene format=3 load_steps=4]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/stage_wild_woods.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="4"]
+[ext_resource type="Shader" path="res://shaders/palette_scanline.shader" id="5"]
+[sub_resource type="ShaderMaterial" id="1"]
+shader = ExtResource("5")
+[node name="VisualsDemo" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+centered = false
+z_index = -100
+
+[node name="PlayerInstance" parent="." instance=ExtResource("3")]
+position = Vector2(170, 560)
+
+[node name="EnemyInstance" parent="."]
+; enemy scene will be instanced at runtime if the resource exists
+instance = ExtResource("4")
+position = Vector2(920, 560)
+
+[node name="Camera" type="Camera2D" parent="."]
+current = true
+position = Vector2(640, 360)
+
+[node name="PaletteLayer" type="ColorRect" parent="."]
+rect_min_size = Vector2(1280, 720)
+color = Color(0, 0, 0, 0)
+material = SubResource(1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Instructions" type="Label" parent="UI"]
+text = "Visuals Demo - press J to attack, K for special. This scene uses the palette shader if available."
+position = Vector2(12, 12)
+add_theme_font_size_override("font_size", 18)
