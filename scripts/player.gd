@@ -43,7 +43,33 @@ func _ready():
 		damage = int(hero_data["damage"])
 		speed = int(hero_data["speed"])
 		durability = int(hero_data["durability"])
-		sprite.texture = load(hero_data["sprite"])
+		# load sprite or sprite frames depending on node type
+		var tex_path := hero_data.get("sprite", "")
+		# Prefer an explicit SpriteFrames resource if provided
+		if hero_data.has("sprite_frames") and hero_data["sprite_frames"] != "":
+			var sf_path = hero_data["sprite_frames"]
+			if ResourceLoader.exists(sf_path):
+				var sf_res = load(sf_path)
+				if sf_res and sf_res is SpriteFrames and sprite is AnimatedSprite2D:
+					sprite.frames = sf_res
+					var names = sprite.frames.get_animation_names()
+					if names.size() > 0:
+						sprite.animation = names[0]
+						sprite.play()
+		# Otherwise, if sprite node is AnimatedSprite2D and a texture path is provided, create a one-frame animation
+		elif sprite is AnimatedSprite2D and tex_path != "" and ResourceLoader.exists(tex_path):
+			var tex = load(tex_path)
+			if tex:
+				var frames_res := SpriteFrames.new()
+				frames_res.add_animation("default")
+				frames_res.add_frame("default", tex)
+				sprite.frames = frames_res
+				sprite.animation = "default"
+				sprite.play()
+		# If sprite is a Sprite2D, assign texture directly
+		elif sprite is Sprite2D and tex_path != "" and ResourceLoader.exists(tex_path):
+			sprite.texture = load(tex_path)
+		# apply sprite scale override if present
 		sprite.scale = Vector2(float(hero_data.get("sprite_scale", 1.0)), float(hero_data.get("sprite_scale", 1.0)))
 	z_index = int(position.y)
 
